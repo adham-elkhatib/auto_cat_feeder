@@ -1,0 +1,68 @@
+name: auto_cat_feeder
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  ## t2 -- Presentation
+  flutter_svg: ^2.0.5
+  firebase_database: ^11.0.2
+
+  barcode_scan2: ^4.5.1
+  introduction_screen: ^3.1.14
+  ## t2 -- Providers
+  cloud_firestore: ^5.4.4
+  #  firebase_database: ^10.2.0
+  http: ^0.13.0
+  ## t2 -- Services
+  flutter_dotenv: ^5.0.2
+  logger: ^1.1.0
+  min_id: ^1.1.0
+  intl: ^0.20.2
+  shared_preferences: ^2.5.3
+  font_awesome_flutter: ^10.8.0
+  #  firebase_crashlytics: ^4.1.3
+  form_controller: ^0.8.4
+  google_fonts: ^4.0.4
+  awesome_notifications: ^0.10.1
+  ## t2 -- Firebase
+  firebase: ^9.0.2
+  firebase_auth: ^5.3.1
+  #  firebase_storage: ^11.2.1
+  permission_handler: ^11.3.1
+  ## t2 -- Other Utilities
+  google_maps_flutter: ^2.2.8
+  multi_dropdown: ^3.0.0
+  qr_flutter: ^4.0.0
+  google_sign_in: ^6.2.2
+  firebase_messaging: ^15.2.5
+  webview_flutter: ^4.11.0
+  ##!SECTION --Development Dependencies
+  stack_trace: any
+  firebase_core: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  auto_route_generator: ^5.0.3
+  build_runner: ^2.1.8
+  flutter_application_id: ^2.0.0-dev
+  flutter_native_splash: ^2.4.4
+  flutter_launcher_icons: ^0.14.2
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - dev.env
+    - prod.env
