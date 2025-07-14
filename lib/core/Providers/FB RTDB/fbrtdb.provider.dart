@@ -45,8 +45,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/disconnect',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/disconnect',
       );
     }
   }
@@ -58,8 +58,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/reconnect',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/reconnect',
       );
     }
   }
@@ -79,8 +79,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/set',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/set',
       );
     }
   }
@@ -101,8 +101,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/push',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/push',
       );
       return null;
     }
@@ -123,8 +123,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/get',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/get',
       );
       return null;
     }
@@ -141,8 +141,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/once',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/once',
       );
       return null;
     }
@@ -157,8 +157,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/update',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/update',
       );
     }
   }
@@ -171,8 +171,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/updateMultible',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/updateMultible',
       );
     }
   }
@@ -188,8 +188,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/remove',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/remove',
       );
     }
   }
@@ -202,8 +202,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/removeMulti',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/removeMulti',
       );
     }
   }
@@ -229,8 +229,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/onValue',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/onValue',
       );
       return const Stream.empty();
     }
@@ -249,8 +249,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/onChildAdded',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/onChildAdded',
       );
       return const Stream.empty();
     }
@@ -268,8 +268,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/onChildChanged',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/onChildChanged',
       );
       return const Stream.empty();
     }
@@ -290,8 +290,8 @@ class RTDBProvider extends DataProvider {
     } catch (e, s) {
       ErrorHandlingService.handle(
         e,
-        'RTDBProvider/onChildRemoved',
-        stackTrace: s,
+        s,
+        location: 'RTDBProvider/onChildRemoved',
       );
       return const Stream.empty();
     }
@@ -322,7 +322,11 @@ class RTDBProvider extends DataProvider {
         applyLocally: applyLocally,
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBProvider/transact', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBProvider/transact',
+      );
       return null;
     }
   }

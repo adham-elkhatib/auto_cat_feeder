@@ -39,13 +39,14 @@ class RTDBRepo<T> {
   //
   //SECTION Create
   //t1 Create
-  Future create(T item, {
+  Future create(
+    T item, {
     String? key,
     bool generateKey = true,
   }) async {
     //
     assert(generateKey || key != null,
-    'Provide a key if generating key is disabled');
+        'Provide a key if generating key is disabled');
     //
     try {
       if (generateKey) {
@@ -54,18 +55,23 @@ class RTDBRepo<T> {
         return await _db.set("$path/$key", fromModel(item));
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/create', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/create',
+      );
     }
   }
 
   //t1 Create Multiple
-  Future createMultiple(List<T> items, {
+  Future createMultiple(
+    List<T> items, {
     List<String>? keys,
     bool generateKey = true,
   }) async {
     //
     assert(generateKey || (keys != null && keys.length == items.length),
-    'Provide keys if generating key is disabled');
+        'Provide keys if generating key is disabled');
     //
     try {
       if (generateKey) {
@@ -78,8 +84,11 @@ class RTDBRepo<T> {
         }
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/createMultiple',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/createMultiple',
+      );
     }
   }
 
@@ -96,7 +105,11 @@ class RTDBRepo<T> {
       }
       return null;
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/read', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/read',
+      );
       return null;
     }
   }
@@ -110,7 +123,11 @@ class RTDBRepo<T> {
       }
       return null;
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/readAll', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/readAll',
+      );
       return null;
     }
   }
@@ -120,13 +137,14 @@ class RTDBRepo<T> {
   //
   //SECTION Update
   //t1 Update
-  Future<bool> update(String itemKey,
-      T? updatedItem, {
-        bool isTransact = false,
-        T Function(T item)? transactionProcess,
-        bool Function(T item)? transactionassertion,
-        bool applyTransactLocally = true,
-      }) async {
+  Future<bool> update(
+    String itemKey,
+    T? updatedItem, {
+    bool isTransact = false,
+    T Function(T item)? transactionProcess,
+    bool Function(T item)? transactionassertion,
+    bool applyTransactLocally = true,
+  }) async {
     //
     assert(!isTransact || (transactionProcess != null && updatedItem == null));
     //
@@ -135,16 +153,16 @@ class RTDBRepo<T> {
         //
         return _db
             .update(
-          "$path/$itemKey",
-          fromModel(updatedItem as T) as Map<String, dynamic>,
-        )
+              "$path/$itemKey",
+              fromModel(updatedItem as T) as Map<String, dynamic>,
+            )
             .then((value) => true);
         //
       } else {
         //
         TransactionResult? result = await _db.transact(
           "$path/$itemKey",
-              (currentData) {
+          (currentData) {
             if (currentData != null) {
               return fromModel(transactionProcess!(
                 toModel(
@@ -157,12 +175,12 @@ class RTDBRepo<T> {
           },
           assertion: transactionassertion != null
               ? (currentData) {
-            if (currentData != null) {
-              return transactionassertion(toModel(currentData) as T);
-            } else {
-              return false;
-            }
-          }
+                  if (currentData != null) {
+                    return transactionassertion(toModel(currentData) as T);
+                  } else {
+                    return false;
+                  }
+                }
               : null,
           applyLocally: applyTransactLocally,
         );
@@ -170,36 +188,46 @@ class RTDBRepo<T> {
         return result?.committed ?? false;
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/update', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/update',
+      );
       return false;
     }
   }
 
   //t1 Update Multible
-  Future<bool> updateMultible(List<String> itemKeys,
-      List<T> updatedItems,) async {
+  Future<bool> updateMultible(
+    List<String> itemKeys,
+    List<T> updatedItems,
+  ) async {
     //
     assert(itemKeys.length == updatedItems.length,
-    "Provide the same length of keys and items.");
+        "Provide the same length of keys and items.");
     //
     try {
       //
       return _db
           .updateMultible(
-        path,
-        Map.fromIterables(
-          itemKeys.map((e) => e),
-          updatedItems.map(
+            path,
+            Map.fromIterables(
+              itemKeys.map((e) => e),
+              updatedItems.map(
                 (e) => fromModel(e),
-          ),
-        ),
-      )
+              ),
+            ),
+          )
           .then(
             (value) => true,
-      );
+          );
       //
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'RTDBRepo<$T>/update', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'RTDBRepo<$T>/update',
+      );
       return false;
     }
   }
@@ -223,10 +251,9 @@ class RTDBRepo<T> {
   //
   //SECTION Stream
   //t1 Watch
-  Stream<List<T?>?> watch() =>
-      _db
-          .onValue(path, discardKey: discardKey)
-          .asyncMap((l) => l?.map((o) => toModel((o))).toList());
+  Stream<List<T?>?> watch() => _db
+      .onValue(path, discardKey: discardKey)
+      .asyncMap((l) => l?.map((o) => toModel((o))).toList());
 
   //t1 OnCreate
   // Logs each child as a seperate event [only initially,afterwards only the new child]
@@ -238,17 +265,18 @@ class RTDBRepo<T> {
       _db.onChildChanged(path).asyncMap((o) => toModel((o)));
 
   //t1 OnDelete
-  Stream<T?> onDelete() =>
-      _db
-          .onChildRemoved(path, discardKey: discardKey)
-          .asyncMap((o) => toModel((o)));
+  Stream<T?> onDelete() => _db
+      .onChildRemoved(path, discardKey: discardKey)
+      .asyncMap((o) => toModel((o)));
 
   //!SECTION Stream
 
   //
   //SECTION Helper Methods
   //t1 From Model
-  Object? fromModel(T item,) {
+  Object? fromModel(
+    T item,
+  ) {
     throw UnimplementedError();
   }
 
@@ -257,11 +285,15 @@ class RTDBRepo<T> {
     throw UnimplementedError();
   }
 
-  Object? fromJson(String item,) {
+  Object? fromJson(
+    String item,
+  ) {
     throw UnimplementedError();
   }
 
-  String toJson(T item,) {
+  String toJson(
+    T item,
+  ) {
     throw UnimplementedError();
   }
 //!SECTION Helper Methods

@@ -6,6 +6,7 @@ import '../../../interfaces/auth_method.dart';
 import '../../../interfaces/auth_provider.dart';
 import '../../../models/auth.model.dart';
 import 'methods/email_auth_method.dart';
+import 'methods/google_auth_method.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -14,34 +15,61 @@ class FirebaseAuthProvider implements AuthProvider {
       : _firebaseAuth = firebaseAuth;
 
   @override
-  Future<AuthModel?> signIn(AuthMethod method) async {
+  Future<AuthModel> signIn(AuthMethod method) async {
     try {
       firebase_auth.UserCredential userCredential;
+
       if (method is EmailAuthMethod) {
         userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: method.email,
           password: method.password,
         );
+      } else if (method is GoogleAuthMethod) {
+        final googleUser = await method.googleSignIn.signIn();
+        if (googleUser == null) {
+          throw firebase_auth.FirebaseAuthException(
+            code: 'google-sign-in-cancelled',
+            message: 'Google sign-in was cancelled by user',
+          );
+        }
+
+        final googleAuth = await googleUser.authentication;
+        final credential = firebase_auth.GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        userCredential = await _firebaseAuth.signInWithCredential(credential);
       } else {
         throw UnimplementedError('Authentication method not supported.');
       }
+
       final user = userCredential.user;
       if (user != null) {
         return AuthModel(
           uid: user.uid,
           authenticationToken: await user.getIdToken() ?? '',
           refreshToken: user.refreshToken ?? '',
-          provider: 'firebase',
+          provider: method is GoogleAuthMethod ? 'google' : 'email',
           misc: {
             'email': user.email,
             'photoUrl': user.photoURL,
           },
         );
       }
+
+      throw firebase_auth.FirebaseAuthException(
+        code: 'sign-in-null-user',
+        message: 'No user returned from sign-in process.',
+      );
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      rethrow;
     } catch (e) {
-      print('Error during sign-in: $e');
+      throw firebase_auth.FirebaseAuthException(
+        code: 'unexpected-auth-error',
+        message: e.toString(),
+      );
     }
-    return null;
   }
 
   @override
@@ -144,7 +172,7 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  String? getCurrentUser()  {
+  String? getCurrentUser() {
     final firebaseUser = _firebaseAuth.currentUser;
     if (firebaseUser == null) return null;
 

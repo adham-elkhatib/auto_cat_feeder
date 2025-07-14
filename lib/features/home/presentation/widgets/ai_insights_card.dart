@@ -1,16 +1,17 @@
-import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../Data/Model/Cat/cat.model.dart';
-import '../../../../Data/Model/Cat/cat_breed.dart';
-import '../../../../Data/Model/Cat/energy_level.dart';
-import '../../../../Data/Model/Cat/gender.dart';
-import '../../../../constants.dart';
+import '../../../../core/Services/Model Service/model_service.dart';
+import '../../../../core/localization/locale_keys.g.dart';
+import '../../../cat_profile/domain/entities/cat_breed.dart';
+import '../../../cat_profile/domain/entities/cat_entity.dart';
+import '../../../cat_profile/domain/entities/energy_level.dart';
+import '../../../cat_profile/domain/entities/gender.dart';
+import '../providers/home_bloc.dart';
 
 class AIInsightsCard extends StatefulWidget {
-  final Cat cat;
+  final CatEntity cat;
 
   const AIInsightsCard({
     Key? key,
@@ -22,9 +23,18 @@ class AIInsightsCard extends StatefulWidget {
 }
 
 class _AIInsightsCardState extends State<AIInsightsCard> {
-  String status = "Press update to get insights.";
+  String status = LocaleKeys.home_ai_default_status.tr();
   String recommendation = "";
   bool isLoading = false;
+
+  CatEntity? lastCat;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAIRecommendation();
+    lastCat = widget.cat;
+  }
 
   Future<void> _fetchAIRecommendation() async {
     setState(() {
@@ -32,38 +42,23 @@ class _AIInsightsCardState extends State<AIInsightsCard> {
     });
 
     try {
-      final url = Uri.parse("$apiBaseUrl/predict/");
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "breed": widget.cat.breed.label,
-          "sex": widget.cat.gender.label,
-          "age_years": widget.cat.age,
-          "weight_kg": widget.cat.weight,
-          "energy_level": widget.cat.energyLevel.label,
-        }),
-      );
+      final grams = await ModelService().predict({
+        "Breed": widget.cat.breed.label,
+        "Sex": widget.cat.gender.label,
+        "Age (Years)": widget.cat.age,
+        "Weight (kg)": widget.cat.weight,
+        "Energy Level": widget.cat.energyLevel.label,
+      });
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final grams = data['Predicted Daily Food Intake (g)'];
-
-        setState(() {
-          status = "${widget.cat.name} looks healthy!";
-          recommendation =
-              "Recommended daily intake: ${grams.toStringAsFixed(1)}g";
-        });
-      } else {
-        setState(() {
-          status = "Failed to get prediction.";
-          recommendation = "Please try again later.";
-        });
-      }
+      setState(() {
+        status = "${widget.cat.name} looks healthy!";
+        recommendation = LocaleKeys.home_ai_recommendation
+            .tr(args: [grams.toStringAsFixed(1)]);
+      });
     } catch (e) {
       setState(() {
         status = "Error: ${e.toString()}";
-        recommendation = "";
+        recommendation = LocaleKeys.home_ai_try_later.tr();
       });
     } finally {
       setState(() {
@@ -73,95 +68,116 @@ class _AIInsightsCardState extends State<AIInsightsCard> {
   }
 
   @override
+  void didUpdateWidget(covariant AIInsightsCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.cat != oldWidget.cat) {
+      _fetchAIRecommendation();
+      lastCat = widget.cat;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Icon(
-                    Icons.insights,
-                    size: 23,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "AI insights",
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                    ),
-                    Text(
-                      "Summary",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                    )
-                  ],
-                ),
-              ],
-            ),
+    return BlocListener<HomeBloc, HomeState>(
+      listenWhen: (prev, curr) => curr is HomeLoaded && curr.cat != lastCat,
+      listener: (context, state) {
+        if (state is HomeLoaded) {
+          setState(() {
+            lastCat = state.cat;
+          });
+          _fetchAIRecommendation();
+        }
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  status,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                // todo البوكس ده بيبقا فاضي فى الأول و شكله مش حلو
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer,
-                    borderRadius: BorderRadius.circular(4),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 16,
+                left: 16,
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    child: Icon(
+                      Icons.insights,
+                      size: 23,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
-                  child: Text(
-                    recommendation.isNotEmpty
-                        ? recommendation
-                        : "No recommendation yet.",
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        LocaleKeys.home_ai_title.tr(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                      ),
+                      Text(
+                        LocaleKeys.home_ai_summary.tr(),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    status,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontStyle: recommendation.isNotEmpty
-                              ? FontStyle.normal
-                              : FontStyle.italic,
-                          color:
-                              Theme.of(context).colorScheme.onTertiaryContainer,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton.icon(
-                  onPressed: isLoading ? null : _fetchAIRecommendation,
-                  icon: const Icon(Icons.refresh),
-                  label: Text(isLoading ? "Updating..." : "Update"),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      recommendation.isNotEmpty
+                          ? recommendation
+                          : LocaleKeys.home_ai_no_recommendation.tr(),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontStyle: recommendation.isNotEmpty
+                                ? FontStyle.normal
+                                : FontStyle.italic,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

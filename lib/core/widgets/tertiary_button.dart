@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class TertiaryButton extends StatelessWidget {
   //SECTION - Widget Arguments
   final String title;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
   //!SECTION
   //
@@ -34,7 +34,7 @@ class TertiaryButton extends StatelessWidget {
 
     //SECTION - Build Return
     return TextButton(
-      onPressed: () => onPressed(),
+      onPressed: onPressed,
       child: Text(
         title,
         textAlign: TextAlign.center,

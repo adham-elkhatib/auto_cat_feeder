@@ -1,7 +1,6 @@
 name: auto_cat_feeder
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 version: 1.0.0+1
 
 environment:
@@ -11,57 +10,73 @@ dependencies:
   flutter:
     sdk: flutter
 
-  ## t2 -- Presentation
+  # 🔶 UI & Presentation
   flutter_svg: ^2.0.5
-  firebase_database: ^11.0.2
-
-  barcode_scan2: ^4.5.1
-  introduction_screen: ^3.1.14
-  ## t2 -- Providers
-  cloud_firestore: ^5.4.4
-  #  firebase_database: ^10.2.0
-  http: ^0.13.0
-  ## t2 -- Services
-  flutter_dotenv: ^5.0.2
-  logger: ^1.1.0
-  min_id: ^1.1.0
-  intl: ^0.20.2
-  shared_preferences: ^2.5.3
-  font_awesome_flutter: ^10.8.0
-  #  firebase_crashlytics: ^4.1.3
-  form_controller: ^0.8.4
   google_fonts: ^4.0.4
-  awesome_notifications: ^0.10.1
-  ## t2 -- Firebase
+  introduction_screen: ^3.1.14
+  font_awesome_flutter: ^10.8.0
+  webview_flutter: ^4.11.0
+  form_controller: ^0.8.4
+
+  # 🔶 State Management & Architecture
+  flutter_bloc: ^8.1.2
+  get_it: ^8.0.3
+  dartz: ^0.10.1
+  equatable: ^2.0.7
+
+  # 🔶 Firebase Services
+  firebase_core: any
   firebase: ^9.0.2
   firebase_auth: ^5.3.1
-  #  firebase_storage: ^11.2.1
-  permission_handler: ^11.3.1
-  ## t2 -- Other Utilities
-  google_maps_flutter: ^2.2.8
-  multi_dropdown: ^3.0.0
-  qr_flutter: ^4.0.0
-  google_sign_in: ^6.2.2
+  firebase_crashlytics: ^4.3.9
+  firebase_database: ^11.0.2
   firebase_messaging: ^15.2.5
-  webview_flutter: ^4.11.0
-  ##!SECTION --Development Dependencies
+  cloud_firestore: ^5.4.4
+  # firebase_storage: ^11.2.1
+
+  # 🔶 Authentication & Permissions
+  google_sign_in: ^6.2.2
+  permission_handler: ^11.3.1
+
+  # 🔶 Networking & APIs
+  dio: ^5.7.0
+  http: ^0.13.0
+  data_connection_checker_tv: ^0.3.5-nullsafety
+
+  # 🔶 Localization & Internationalization
+  easy_localization: ^3.0.7+1
+  intl: ^0.20.2
+
+  # 🔶 Notifications
+  awesome_notifications: ^0.10.1
+
+  # 🔶 Utilities
+  logger: ^1.1.0
+  flutter_dotenv: ^5.0.2
+  shared_preferences: ^2.5.3
+  barcode_scan2: ^4.5.1
+  min_id: ^1.1.0
+  tflite_flutter: ^0.11.0
+  json_annotation: ^4.9.0
+
+  # 🔶 Development Utilities
   stack_trace: any
-  firebase_core: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  auto_route_generator: ^5.0.3
   build_runner: ^2.1.8
+  auto_route_generator: ^5.0.3
   flutter_application_id: ^2.0.0-dev
-  flutter_native_splash: ^2.4.4
-  flutter_launcher_icons: ^0.14.2
+
 
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/models/
+    - assets/translations/
     - assets/images/
     - assets/icons/
     - dev.env

@@ -1,8 +1,8 @@
 //t2 Core Packages Imports
 import 'package:logger/logger.dart';
 
-//t2 Dependancies Imports
 import '../App/app.service.dart';
+import '../Error Handling/models/app_error.dart';
 
 //t3 Services
 //t3 Models
@@ -32,5 +32,13 @@ class LoggingService {
   static void log(String message,
       {Level? level, dynamic error, StackTrace? stackTrace}) {
     _service.log(level ?? _level, message, error, stackTrace);
+  }
+
+  static void logError(AppError error) {
+    log(
+      "[AppError] ${error.msg ?? error.code}",
+      level: Level.error,
+      error: error,
+    );
   }
 }

@@ -65,8 +65,11 @@ class FirestoreProvider extends DataProvider {
         throw ("[c/firestore-item-exists]");
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/createSingle',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/createSingle',
+      );
     }
     return null;
   }
@@ -98,8 +101,10 @@ class FirestoreProvider extends DataProvider {
         return documentIds;
       } catch (e, s) {
         ErrorHandlingService.handle(
-            e, 'FirestoreProvider/createMultible/batched',
-            stackTrace: s);
+          e,
+          s,
+          location: 'FirestoreProvider/createMultible/batched',
+        );
       }
     } else {
       try {
@@ -108,8 +113,11 @@ class FirestoreProvider extends DataProvider {
               uniques: uniques);
         }
       } catch (e, s) {
-        ErrorHandlingService.handle(e, 'FirestoreProvider/createMultible',
-            stackTrace: s);
+        ErrorHandlingService.handle(
+          e,
+          s,
+          location: 'FirestoreProvider/createMultible',
+        );
       }
     }
     return null;
@@ -122,12 +130,14 @@ class FirestoreProvider extends DataProvider {
   Future<Map<String, dynamic>?> readSingle(
       String collection, String documentId) async {
     try {
-      return await _store.collection(collection).doc(documentId).get().then(
-            (value) => value.data(),
-          );
+      final doc = await _store.collection(collection).doc(documentId).get();
+      return doc.data();
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/readSingle',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/readSingle',
+      );
     }
     return null;
   }
@@ -163,8 +173,11 @@ class FirestoreProvider extends DataProvider {
           )
           .toList();
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/readAll',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/readAll',
+      );
     }
     return null;
   }
@@ -229,8 +242,11 @@ class FirestoreProvider extends DataProvider {
           )
           .toList();
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/readWhere',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/readWhere',
+      );
     }
     return null;
   }
@@ -245,8 +261,11 @@ class FirestoreProvider extends DataProvider {
       await _store.collection(collection).doc(documentId).update(documentData);
       return documentId;
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/updateSingle',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/updateSingle',
+      );
     }
     return null;
   }
@@ -276,8 +295,10 @@ class FirestoreProvider extends DataProvider {
         return documentIds;
       } catch (e, s) {
         ErrorHandlingService.handle(
-            e, 'FirestoreProvider/updateMultible/batched',
-            stackTrace: s);
+          e,
+          s,
+          location: 'FirestoreProvider/updateMultible/batched',
+        );
       }
     }
     //
@@ -287,8 +308,11 @@ class FirestoreProvider extends DataProvider {
           await updateSingle(collection, documentIds[i], documentsData[i]);
         }
       } catch (e, s) {
-        ErrorHandlingService.handle(e, 'FirestoreProvider/updateMultible',
-            stackTrace: s);
+        ErrorHandlingService.handle(
+          e,
+          s,
+          location: 'FirestoreProvider/updateMultible',
+        );
       }
     }
     return null;
@@ -302,8 +326,11 @@ class FirestoreProvider extends DataProvider {
     try {
       return await _store.collection(collection).doc(documentId).delete();
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/deleteSingle',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/deleteSingle',
+      );
     }
   }
 
@@ -322,8 +349,10 @@ class FirestoreProvider extends DataProvider {
         await batch.commit();
       } catch (e, s) {
         ErrorHandlingService.handle(
-            e, 'FirestoreProvider/deleteMultible/batched',
-            stackTrace: s);
+          e,
+          s,
+          location: 'FirestoreProvider/deleteMultible/batched',
+        );
       }
     } else {
       try {
@@ -331,8 +360,11 @@ class FirestoreProvider extends DataProvider {
           await deleteSingle(collection, documentsIds[i]);
         }
       } catch (e, s) {
-        ErrorHandlingService.handle(e, 'FirestoreProvider/deleteMultible',
-            stackTrace: s);
+        ErrorHandlingService.handle(
+          e,
+          s,
+          location: 'FirestoreProvider/deleteMultible',
+        );
       }
     }
   }
@@ -348,7 +380,11 @@ class FirestoreProvider extends DataProvider {
       List<String> ids = snapshot.docs.map((e) => e.id).toList();
       return await deleteMultible(collection, ids, batched: batched);
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/clear', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/clear',
+      );
     }
   }
 
@@ -365,8 +401,11 @@ class FirestoreProvider extends DataProvider {
             (v) => v.data(),
           );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/streamSingle',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/streamSingle',
+      );
     }
     return Stream.value(null);
   }
@@ -406,8 +445,11 @@ class FirestoreProvider extends DataProvider {
         },
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/streamAll',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/streamAll',
+      );
     }
     return Stream.value(null);
   }
@@ -474,8 +516,11 @@ class FirestoreProvider extends DataProvider {
             .toList(),
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/streamWhere',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/streamWhere',
+      );
     }
     return Stream.value(null);
   }
@@ -492,7 +537,11 @@ class FirestoreProvider extends DataProvider {
               )
           : false;
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/exists', stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/exists',
+      );
     }
     return true;
   }
@@ -543,8 +592,11 @@ class FirestoreProvider extends DataProvider {
       //t2 Returning
       return snapshot.docs.isNotEmpty;
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirestoreProvider/existsWhere',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirestoreProvider/existsWhere',
+      );
     }
     return true;
   }

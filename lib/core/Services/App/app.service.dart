@@ -23,8 +23,12 @@ class App {
     env = environment;
     try {
       return await environment.load();
-    } catch (e) {
-      ErrorHandlingService.handle(e, "App/initialize",);
+    } catch (e, s) {
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "App/initialize",
+      );
     }
   }
 }

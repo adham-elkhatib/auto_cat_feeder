@@ -1,0 +1,267 @@
+{
+  "auth": {
+    "errors": {
+      "invalid_email": "The email address is badly formatted.",
+      "invalid_credential": "The supplied auth credential is incorrect, malformed or has expired.",
+      "email_in_use": "The email address is already in use by another account.",
+      "user_not_found": "No user found with this email. Please check your input.",
+      "wrong_password": "Wrong password. Please try again.",
+      "user_disabled": "This user account has been disabled.",
+      "not_allowed": "This operation is not allowed. Contact support.",
+      "weak_password": "Password is too weak. Please choose a stronger one.",
+      "too_many_requests": "Too many requests. Try again later.",
+      "network_error": "Network error. Check your internet connection."
+    },
+    "landing": {
+      "sign_in": "Sign in",
+      "sign_up": "Sign up"
+    },
+    "sign_in": {
+      "title": "Sign in",
+      "button": "Sign in",
+      "loading": "Signing in...",
+      "create_account_link": "Create an account",
+      "email": "Email",
+      "email_hint": "exa@example.com",
+      "password": "Password",
+      "forgot_password": "Forget password?",
+      "errors": {
+        "empty_email": "Please enter your email",
+        "invalid_email": "Please enter a valid email",
+        "empty_password": "Please enter your password"
+      }
+    },
+    "sign_up": {
+      "title": "Create Account",
+      "button": "Sign up",
+      "loading": "Signing up...",
+      "back_to_signin": "I already have an account",
+      "account_info": "Account Information",
+      "general_info": "General Information",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "email_hint": "exa@example.com",
+      "password": "Password",
+      "phone": "Mobile number",
+      "phone_hint": "05********",
+      "rules": {
+        "min_length": "At least 8 characters long",
+        "uppercase": "Contains uppercase letter",
+        "lowercase": "Contains lowercase letter",
+        "number": "Contains number",
+        "special_char": "Contains special character"
+      },
+      "errors": {
+        "empty_first_name": "The first name cannot be empty",
+        "short_first_name": "The first name must be at least 3 characters long",
+        "empty_last_name": "The last name cannot be empty",
+        "short_last_name": "The last name must be at least 3 characters long",
+        "empty_email": "Please enter your email",
+        "invalid_email": "Please enter a valid email address",
+        "empty_password": "The password cannot be empty",
+        "min_length": "Must be at least 8 characters long",
+        "uppercase": "Must contain at least one uppercase letter",
+        "lowercase": "Must contain at least one lowercase letter",
+        "number": "Must contain at least one number",
+        "special_char": "Must contain at least one special character",
+        "empty_phone": "Please enter your phone number",
+        "invalid_phone": "The phone number must start with \"05\" and be 10 digits long"
+      }
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "email": "Email",
+      "email_hint": "exa@example.com",
+      "button": "Reset Password",
+      "loading": "Sending...",
+      "success": "An email has been sent successfully to reset your password",
+      "errors": {
+        "empty_email": "Please enter your email",
+        "invalid_email": "Please enter a valid email"
+      }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "sign_out": "Sign Out",
+    "button": "Save",
+    "loading": "Saving...",
+    "account_details": "Account Details",
+    "personal_info": "Personal Information",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "messages": {
+      "update_success": "Your profile has been updated!"
+    },
+    "errors": {
+      "empty_first_name": "The first name cannot be empty",
+      "short_first_name": "The first name must be at least 3 characters long",
+      "empty_last_name": "The last name cannot be empty",
+      "short_last_name": "The last name must be at least 3 characters long",
+      "empty_phone": "Please enter your phone number",
+      "invalid_phone": "The phone number must start with \"05\" and be 10 digits long"
+    }
+  },
+  "on_boarding": {
+    "pages": {
+      "title_1": "Tell us about your cat",
+      "body_1": "Start by sharing your cat's age and gender to create their profile.",
+      "title_2": "Set Up Your Feeder",
+      "body_2": "Next, you'll link your feeder to the app for seamless feeding.",
+      "title_3": "Set a Feeding Schedule",
+      "body_3": "Plan and automate your cat's meals with just a few taps.",
+      "title_4": "Feed. Track. Relax.",
+      "body_4": "Manage meals and monitor your cat’s health effortlessly with AI insights."
+    },
+    "actions": {
+      "skip": "Skip",
+      "done": "Get started"
+    }
+  },
+  "home": {
+    "ui": {
+      "welcome": "Welcome back 👋",
+      "empty_meals": "No meals scheduled yet",
+      "scheduled": "Scheduled meals"
+    },
+    "info_card": {
+      "status": "Overall status",
+      "weight": "{} KG",
+      "meals": "{} Meals",
+      "age": "{} Years old"
+    },
+    "feeder": {
+      "title": "Feeder Management",
+      "connected": "Feeder Connected",
+      "status_connected": "Connected",
+      "status_empty": "Container empty",
+      "status_full": "Contains food",
+      "not_connected": "Not Connected",
+      "connecting": "Connecting...",
+      "connection_failed": "Connection failed",
+      "actions": {
+        "scan": "Scan to connect",
+        "disconnect": "Disconnect feeder",
+        "connected_success": "Feeder connected successfully.",
+        "disconnected_success": "Feeder disconnected successfully.",
+        "no_barcode": "No barcode scanned.",
+        "scan_failed": "Failed to scan the barcode.",
+        "connect_first": "Connect to a Feeder First!"
+      }
+    },
+    "ai": {
+      "title": "AI insights",
+      "summary": "Summary",
+      "default_status": "Press update to get insights.",
+      "recommendation": "Recommended daily intake: {}g",
+      "no_recommendation": "No recommendation yet.",
+      "prediction_failed": "Failed to get prediction.",
+      "try_later": "Please try again later.",
+      "update": "Update",
+      "updating": "Updating..."
+    }
+  },
+  "meals": {
+    "dialogs": {
+      "delete_title": "Delete meal",
+      "delete_message": "Are you sure you want to delete the scheduled meal?",
+      "edit_title": "Edit serving amount",
+      "edit_description": "This will be the amount served by the feeder for the cat.",
+      "edit_label": "Serving amount (g)",
+      "edit_error": "Please enter a valid serving amount.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "save": "Save"
+    },
+    "card": {
+      "repeat_pattern": "Everyday, {}g",
+      "serving_label": "{} g serving",
+      "delete": "Delete"
+    }
+  },
+  "feeder": {
+    "instructions": {
+      "scan_prompt": "Scan the barcode on your feeder to link it with the app.",
+      "power_notice": "Make sure your feeder is powered on and ready to scan.",
+      "scan_button": "Scan now",
+      "live_feed": "Live Camera Feed"
+    }
+  },
+  "cat_profile": {
+    "title": "Create Your Cat's profile",
+    "description": "Let’s get to know your cat to provide personalized care.",
+    "success": "Cat's profile updated successfully.",
+    "form": {
+      "name": "Cat’s name",
+      "name_hint": "Enter your cat’s name",
+      "age": "Cat’s age",
+      "age_hint": "Enter your cat’s age",
+      "weight": "Cat’s weight",
+      "weight_hint": "Enter your cat’s weight",
+      "breed": "Breed",
+      "energy": "Energy Level"
+    },
+    "errors": {
+      "empty_name": "Please enter your cat’s name.",
+      "short_name": "Name must be at least 2 characters long.",
+      "empty_age": "Please enter your cat’s age.",
+      "invalid_age": "Please enter a valid age.",
+      "empty_weight": "Please enter your cat’s weight.",
+      "invalid_weight": "Please enter a valid weight."
+    },
+    "actions": {
+      "next": "Next",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "common": {
+    "fallback_error": "Something went wrong. Please try again.",
+    "generic_error": "Something went wrong"
+  },
+  "fs": {
+    "aborted": "The operation was aborted. Please retry.",
+    "permission_denied": "You don’t have permission to access this resource.",
+    "not_found": "The requested document does not exist.",
+    "failed_precondition": "Operation failed due to unmet conditions.",
+    "cancelled": "The operation was cancelled.",
+    "data_loss": "Data integrity issue occurred.",
+    "already_exists": "The document already exists.",
+    "item_exists": "An item with the same unique field already exists."
+  },
+  "storage": {
+    "not_found": "The requested file does not exist in Firebase Storage.",
+    "unauthorized": "You don't have permission to access this file.",
+    "cancelled": "The storage operation was cancelled.",
+    "unknown": "An unknown storage error occurred."
+  },
+  "msg": {
+    "invalid_argument": "Invalid argument used for Firebase Messaging.",
+    "unauthorized": "Not authorized to send or receive messages.",
+    "internal_error": "Internal error in Firebase Messaging.",
+    "unknown": "An unknown messaging error occurred."
+  },
+  "rtdb": {
+    "permission_denied": "Permission denied when accessing Realtime Database.",
+    "disconnected": "Lost connection to Realtime Database.",
+    "network_error": "Network error while accessing Realtime Database.",
+    "timeout": "Request to Realtime Database timed out.",
+    "operation_failed": "Operation failed on Realtime Database."
+  },
+  "dio": {
+    "bad_response": "Bad server response. Please try again later.",
+    "connection_timeout": "Connection timed out. Check your network.",
+    "receive_timeout": "Server took too long to respond.",
+    "send_timeout": "Request timeout while sending data.",
+    "cancelled": "Request was cancelled.",
+    "no_internet": "No internet connection.",
+    "unknown_error": "An unknown error occurred. Please try again."
+  },
+  "perm": {
+    "denied": "{} permission denied. Some features may not work.",
+    "denied_permanently": "{} permission permanently denied. Please enable it from settings."
+  }
+}

@@ -41,11 +41,11 @@ class FirestoreRepo<T> {
     //
     String id = (generateId || itemId == null) ? await _generateId() : itemId;
 
-    if (checkId && !generateId) {
-      if (await idExists(id)) {
-        ErrorHandlingService.error("[ItemExists]", 'Repo/createSingle');
-      }
-    }
+    // if (checkId && !generateId) {
+    // if (await idExists(id)) {
+    //   ErrorHandlingService.handle("[ItemExists]", 'Repo/createSingle');
+    // }
+    // }
     try {
       String? r = await _firestore.createSingle(
         collectionId,
@@ -61,8 +61,11 @@ class FirestoreRepo<T> {
         return r;
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/createSingle/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/createSingle/firestore",
+      );
       return null;
     }
     return null;
@@ -88,12 +91,12 @@ class FirestoreRepo<T> {
         // generate id
         String id = (generateId || ids == null) ? await _generateId() : ids[i];
         // check
-        if (checkId && !generateId) {
-          if (await idExists(id)) {
-            ErrorHandlingService.error(
-                "[ItemExists]", 'Repo/createMultible/firestore');
-          }
-        }
+        // if (checkId && !generateId) {
+        //   if (await idExists(id)) {
+        //     ErrorHandlingService.handle(
+        //         "[ItemExists]",s,location:  'Repo/createMultible/firestore');
+        //   }
+        // }
         itemsMap.add({
           'id': id,
           'dateCreated': DateTime.now(),
@@ -111,8 +114,11 @@ class FirestoreRepo<T> {
         return r;
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/createMultible/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/createMultible/firestore",
+      );
       return null;
     }
     return null;
@@ -137,8 +143,11 @@ class FirestoreRepo<T> {
         return toModel(r);
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/readSingle/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/readSingle/firestore",
+      );
       return null;
     }
     return null;
@@ -158,7 +167,11 @@ class FirestoreRepo<T> {
         return r.map((e) => toModel(e)).toList();
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/readAll/firestore", stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/readAll/firestore",
+      );
       return null;
     }
     return null;
@@ -181,8 +194,11 @@ class FirestoreRepo<T> {
         return r.map((e) => toModel(e)).toList();
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/readAllWhere/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/readAllWhere/firestore",
+      );
       return null;
     }
     return null;
@@ -211,8 +227,11 @@ class FirestoreRepo<T> {
         return r;
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/updateSingle/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/updateSingle/firestore",
+      );
       return null;
     }
     return null;
@@ -237,8 +256,11 @@ class FirestoreRepo<T> {
         return r;
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/updateMultible/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/updateMultible/firestore",
+      );
       return null;
     }
     return null;
@@ -262,8 +284,11 @@ class FirestoreRepo<T> {
         id,
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/deleteSingle/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/deleteSingle/firestore",
+      );
     }
   }
 
@@ -281,8 +306,11 @@ class FirestoreRepo<T> {
         batched: batched,
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/deleteMultible/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/deleteMultible/firestore",
+      );
     }
   }
 
@@ -298,7 +326,11 @@ class FirestoreRepo<T> {
         batched: batched,
       );
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/clear/firestore", stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/clear/firestore",
+      );
     }
   }
 
@@ -319,8 +351,11 @@ class FirestoreRepo<T> {
           .streamSingle(collectionId, id)
           .asyncMap((m) => toModel(m));
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/streamSingle/firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/streamSingle/firestore",
+      );
       return const Stream.empty();
     }
   }
@@ -337,7 +372,11 @@ class FirestoreRepo<T> {
           .streamAll(collectionId, orderedBy: orderedBy, limit: limit)
           .asyncMap((m) => m?.map((e) => toModel(e)).toList());
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/streamAll/firestore", stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/streamAll/firestore",
+      );
       return const Stream.empty();
     }
   }
@@ -356,7 +395,11 @@ class FirestoreRepo<T> {
               orderedBy: orderedBy, limit: limit)
           .asyncMap((m) => m?.map((e) => toModel(e)).toList());
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "Repo/streamAll/firestore", stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "Repo/streamAll/firestore",
+      );
       return const Stream.empty();
     }
   }
@@ -376,8 +419,11 @@ class FirestoreRepo<T> {
     try {
       return await _firestore.exists(collectionId, id);
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "UserRepo/idExists/Firestore",
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "UserRepo/idExists/Firestore",
+      );
       return true;
     }
   }
@@ -394,7 +440,11 @@ class FirestoreRepo<T> {
         id = IdGeneratingService.generate(pattern: format);
       }
     } catch (e, s) {
-      ErrorHandlingService.handle(e, "UserRepo/_generateId", stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: "UserRepo/_generateId",
+      );
     }
     return id;
   }

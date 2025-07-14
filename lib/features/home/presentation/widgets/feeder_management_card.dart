@@ -1,73 +1,147 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../Data/Model/Cat/feeder_model.dart';
-import '../../../../Data/Repositories/feeder_repo.dart';
+import '../../../../core/localization/locale_keys.g.dart';
+import '../../../feeder/presentation/providers/feeder_bloc.dart';
+import '../providers/home_bloc.dart';
+import 'feeder_connection_bottom_sheet.dart';
 
 class FeederManagementCard extends StatefulWidget {
-  final FeederModel feeder;
-  final bool isConnected;
-  final bool hasFood;
-  final VoidCallback onOpenSheet;
-
-  const FeederManagementCard({
-    Key? key,
-    required this.isConnected,
-    required this.hasFood,
-    required this.onOpenSheet,
-    required this.feeder,
-  }) : super(key: key);
+  const FeederManagementCard({super.key});
 
   @override
   State<FeederManagementCard> createState() => _FeederManagementCardState();
 }
 
 class _FeederManagementCardState extends State<FeederManagementCard> {
-  FeederModel? currentFeeder;
-  String? deviceId;
+  String? feederId;
+  bool hasRequestedStatus = false;
 
   @override
-  void initState() {
-    currentFeeder = widget.feeder;
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final homeState = context.read<HomeBloc>().state;
+    final feederBloc = context.read<FeederBloc>();
+    final feederState = feederBloc.state;
+
+    if (homeState is HomeLoaded) {
+      feederId = homeState.cat.feederId;
+    }
+
+    final shouldTriggerStatus = feederId != null &&
+        !hasRequestedStatus &&
+        (feederState is! FeederStatusUpdated ||
+            feederState.feeder.id != feederId);
+
+    if (shouldTriggerStatus) {
+      hasRequestedStatus = true;
+      feederBloc.add(StreamFeederStatusEvent(feederId: feederId!));
+    }
+  }
+
+  void _showFeederBottomSheet() {
+    showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => const FeederConnectionBottomSheet(),
+    ).then((_) {
+      final homeState = context.read<HomeBloc>().state;
+      if (homeState is HomeLoaded && homeState.cat.feederId != null) {
+        context.read<FeederBloc>().add(
+              StreamFeederStatusEvent(feederId: homeState.cat.feederId!),
+            );
+      }
+    });
+  }
+
+  Widget _infoText({
+    IconData? icon,
+    String? customIcon,
+    required String label,
+  }) {
+    return Row(
+      children: [
+        if (customIcon != null)
+          SvgPicture.asset(
+            customIcon,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        if (icon != null)
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget infoText(
-        {IconData? icon, String? customIcon, required String label}) {
-      return Row(
-        children: [
-          if (customIcon != null)
-            SvgPicture.asset(
-              customIcon,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          if (icon != null)
-            Icon(
-              icon,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ],
-      );
-    }
+    return BlocBuilder<FeederBloc, FeederState>(
+      builder: (context, state) {
+        late final Widget statusText;
+        late final Widget statusDetails;
 
-    return StreamBuilder(
-      stream:
-          FeederRepo().onUpdate().where((data) => data?.id == "32971015350"),
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          currentFeeder = snapshot.data;
+        if (state is FeederConnecting) {
+          statusText = Text(LocaleKeys.home_feeder_connecting.tr());
+          statusDetails = const CircularProgressIndicator();
+        } else if (state is FeederStatusUpdated) {
+          final feeder = state.feeder;
+          statusText = Text(
+            LocaleKeys.home_feeder_connected.tr(),
+            style: Theme.of(context).textTheme.bodyMedium,
+          );
+          statusDetails = Row(
+            children: [
+              _infoText(
+                icon: Icons.wifi,
+                label: LocaleKeys.home_feeder_status_connected.tr(),
+              ),
+              const SizedBox(width: 24),
+              feeder.foodContainerEmpty == false
+                  ? _infoText(
+                      customIcon: "assets/icons/full_container.svg",
+                      label: LocaleKeys.home_feeder_status_full.tr(),
+                    )
+                  : _infoText(
+                      customIcon: "assets/icons/empty_container.svg",
+                      label: LocaleKeys.home_feeder_status_empty.tr(),
+                    ),
+            ],
+          );
+        } else if (state is FeederError) {
+          statusText = Text(
+            "Error: ${state.message}",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+          );
+          statusDetails = _infoText(
+            icon: Icons.wifi_off,
+            label: LocaleKeys.home_feeder_connection_failed.tr(),
+          );
+        } else {
+          statusText = Text(LocaleKeys.home_feeder_not_connected.tr());
+          statusDetails = _infoText(
+            icon: Icons.wifi_off,
+            label: LocaleKeys.home_feeder_not_connected.tr(),
+          );
         }
+
         return Card(
-          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
             side: BorderSide(
@@ -95,7 +169,7 @@ class _FeederManagementCardState extends State<FeederManagementCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Feeder Management",
+                          LocaleKeys.home_feeder_title.tr(),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -103,49 +177,21 @@ class _FeederManagementCardState extends State<FeederManagementCard> {
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                         ),
-                        Text(
-                          "Overall status",
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                        )
+                        statusText,
                       ],
                     ),
-                    // const Spacer(),
-                    // IconButton(
-                    //   onPressed: () => onOpenSheet(),
-                    //   icon: const Icon(Icons.more_vert),
-                    //   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    // ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: _showFeederBottomSheet,
+                      icon: const Icon(Icons.more_vert),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    infoText(
-                      icon: Icons.wifi,
-                      label: "Connected",
-                    ),
-                    const SizedBox(
-                      width: 24,
-                    ),
-                    (currentFeeder?.foodContainerEmpty == false)
-                        ? infoText(
-                            customIcon: "assets/icons/full_container.svg",
-                            label: "Contains food",
-                          )
-                        : infoText(
-                            customIcon: "assets/icons/empty_container.svg",
-                            label: "Container empty",
-                          ),
-                  ],
-                ),
+                child: statusDetails,
               ),
             ],
           ),

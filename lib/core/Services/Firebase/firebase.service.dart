@@ -20,8 +20,11 @@ class FirebaseService {
       );
       LoggingService.log("Firebase App Initialized: ${app.name}");
     } catch (e, s) {
-      ErrorHandlingService.handle(e, 'FirebaseService/initialize',
-          stackTrace: s);
+      ErrorHandlingService.handle(
+        e,
+        s,
+        location: 'FirebaseService/initialize',
+      );
     }
     return app;
   }

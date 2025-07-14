@@ -1,11 +1,11 @@
 import '../../core/Providers/FB RTDB/fbrtdb_repo.dart';
-import '../Model/Cat/feeder_model.dart';
+import '../../features/feeder/data/models/feeder_model.dart';
 
 class FeederRepo extends RTDBRepo<FeederModel> {
   FeederRepo()
       : super(
           path: "Devices",
-          discardKey: false,
+          discardKey: true,
         );
 
   @override

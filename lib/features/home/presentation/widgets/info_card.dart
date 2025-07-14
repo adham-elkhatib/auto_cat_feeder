@@ -1,12 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../Data/Model/Cat/cat.model.dart';
-import '../../../../Data/Model/Cat/cat_breed.dart';
-import '../../../../Data/Model/Cat/energy_level.dart';
+import '../../../../core/localization/locale_keys.g.dart';
+import '../../../cat_profile/domain/entities/cat_breed.dart';
+import '../../../cat_profile/domain/entities/cat_entity.dart';
+import '../../../cat_profile/domain/entities/energy_level.dart';
 
 class InfoCard extends StatelessWidget {
-  final Cat cat;
+  final CatEntity cat;
   final VoidCallback onOpenSheet;
   final int numberOfMeals;
 
@@ -77,12 +79,12 @@ class InfoCard extends StatelessWidget {
                           ),
                     ),
                     Text(
-                      "Overall status",
+                      LocaleKeys.home_info_card_status.tr(),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
-                    )
+                    ),
                   ],
                 ),
                 const Spacer(),
@@ -101,21 +103,26 @@ class InfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 infoText(
-                    customIcon: "assets/icons/weight.svg",
-                    label: "${cat.weight} KG"),
+                  customIcon: "assets/icons/weight.svg",
+                  label: LocaleKeys.home_info_card_weight.tr(
+                    namedArgs: {'': cat.weight.toString()},
+                  ),
+                ),
                 const SizedBox(
                   width: 8,
                 ),
                 infoText(
                   customIcon: "assets/icons/treat.svg",
-                  label: "$numberOfMeals Meals",
+                  label: LocaleKeys.home_info_card_meals
+                      .tr(namedArgs: {'': numberOfMeals.toString()}),
                 ),
                 const SizedBox(
                   width: 8,
                 ),
                 infoText(
                   icon: Icons.calendar_today,
-                  label: "${cat.age} Years old",
+                  label: LocaleKeys.home_info_card_age
+                      .tr(namedArgs: {'': cat.age.toString()}),
                 ),
                 const SizedBox(
                   width: 8,

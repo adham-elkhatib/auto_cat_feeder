@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   //SECTION - Widget Arguments
   final String title;
-  final Function onPressed;
+  final VoidCallback? onPressed;
   final Color? color;
   final IconData? icon;
 
@@ -17,7 +17,7 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     Key? key,
     required this.title,
-    required this.onPressed,
+    this.onPressed,
     this.icon,
     this.color,
   }) : super(
@@ -38,7 +38,7 @@ class PrimaryButton extends StatelessWidget {
 
     //SECTION - Build Return
     return ElevatedButton(
-      onPressed: () => onPressed(),
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color ?? Theme.of(context).colorScheme.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
